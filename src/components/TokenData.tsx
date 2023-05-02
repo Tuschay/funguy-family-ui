@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { type FC, useState } from 'react';
 import { useContractRead } from 'wagmi';
 
@@ -41,7 +42,15 @@ const TokenData: FC<Props> = (props) => {
 
   return (
     <div className="max-w-sm overflow-hidden rounded shadow-lg">
-      <img className="w-full" src={imageUrl} alt="Sunset in the mountains" />
+      {token.image && (
+        <Image
+          className="w-full"
+          width={172}
+          height={172}
+          src={imageUrl}
+          alt="Funguy Family token"
+        />
+      )}
       <div className="px-6 py-4">
         <div className="mb-2 text-xl font-bold">{token.name}</div>
       </div>

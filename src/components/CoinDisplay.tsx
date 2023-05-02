@@ -99,16 +99,22 @@ const CoinDisplay: FC<Props> = (props) => {
 
   return (
     <div className="flex flex-row items-center justify-between p-4">
-      <div className="select-none rounded-lg border border-black p-2 font-bold shadow-lg">
-        {balance} $TSHY
+      <div className="flex select-none flex-col items-center">
+        <div className="text-sm italic">My balance</div>
+        <div className=" rounded-lg border border-black p-2 font-bold shadow-lg">
+          {balance} $TSHY
+        </div>
       </div>
-      <button
-        disabled={!write}
-        onClick={() => write?.()}
-        className="rounded-lg bg-black p-2 font-bold text-white shadow-lg"
-      >
-        Claim {coins}
-      </button>
+      <div className="flex flex-col items-center">
+        <div className="select-none text-sm italic">Claim $TSHY</div>
+        <button
+          disabled={!write}
+          onClick={() => write?.()}
+          className="rounded-lg bg-black p-2 font-bold text-white shadow-lg"
+        >
+          Claim {coins}
+        </button>
+      </div>
     </div>
   );
 };

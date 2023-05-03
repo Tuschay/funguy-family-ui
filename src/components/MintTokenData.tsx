@@ -25,7 +25,7 @@ const MintTokenData: FC<Props> = (props) => {
 
   useEffect(() => {
     fetch(
-      `https://ipfs.io/ipfs/QmQe4UKnTrGg6MKZdYjpTiSz5m8xg8fZcfgcvCZU3MmBZd/${props.id}`
+      `https://ipfs.io/ipfs/${AppConfig.ipfsHash}/${props.id}`
     )
       .then((value) => {
         return value.json();
@@ -38,7 +38,7 @@ const MintTokenData: FC<Props> = (props) => {
   const imageUrl = token.image?.replace('ipfs://', 'https://ipfs.io/ipfs/');
 
   const { config, isFetchedAfterMount } = usePrepareContractWrite({
-    address: '0x1eb43807f17cf22890fda80a55866a65a2984614',
+    address: AppConfig.addressFunguy as `0x${string}`,
     abi: AppConfig.abiFunguy,
     functionName: 'mint',
     args: [props.id],

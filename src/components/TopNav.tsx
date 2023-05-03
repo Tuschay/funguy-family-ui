@@ -9,9 +9,9 @@ import { AppConfig } from '@/utils/AppConfig';
 const TopNav = () => {
   const { address } = useAccount();
 
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState('0');
   useContractRead({
-    address: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e',
+    address: AppConfig.addressCoin as `0x${string}`,
     abi: AppConfig.abiCoin,
     functionName: 'balanceOf',
     args: [address],
@@ -19,7 +19,7 @@ const TopNav = () => {
       // eslint-disable-next-line no-console
       // console.log('Success - coin', data);
       // eslint-disable-next-line no-underscore-dangle
-      setBalance(parseInt(data._hex, 16));
+      setBalance(Number(parseInt(data._hex, 16) / (Math.pow(10,18))).toPrecision(4));
     },
   });
   return (

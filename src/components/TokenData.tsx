@@ -1,3 +1,4 @@
+import { AppConfig } from '@/utils/AppConfig';
 import Image from 'next/image';
 import { type FC, useEffect, useState } from 'react';
 
@@ -15,7 +16,7 @@ interface Metadata {
 const TokenData: FC<Props> = (props) => {
   const [token, setToken] = useState({} as Metadata);
   // useContractRead({
-  //   address: '0x1eb43807f17cf22890fda80a55866a65a2984614',
+  //   address: AppConfig.addressFunguy as `0x${string}`,
   //   abi: AppConfig.abiFunguy,
   //   functionName: 'tokenURI',
   //   args: [props.id],
@@ -37,7 +38,7 @@ const TokenData: FC<Props> = (props) => {
 
   useEffect(() => {
     fetch(
-      `https://ipfs.io/ipfs/QmQe4UKnTrGg6MKZdYjpTiSz5m8xg8fZcfgcvCZU3MmBZd/${props.id}`
+      `https://ipfs.io/ipfs/${AppConfig.ipfsHash}/${props.id}`
     )
       .then((value) => {
         return value.json();

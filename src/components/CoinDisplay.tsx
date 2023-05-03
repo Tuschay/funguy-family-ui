@@ -1,6 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 
-import type { BigNumber } from 'ethers';
+import { BigNumber } from 'ethers';
 import { type FC, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -16,24 +16,24 @@ interface Props {
 }
 
 const CoinDisplay: FC<Props> = (props) => {
-  const [coins, setCoins] = useState(0);
+  const [coins, setCoins] = useState('0');
   useContractRead({
     // address: '0x7B093653Bf2f9A9812c8b4D67FcDb7183857B288',
-    address: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e',
+    address: AppConfig.addressCoin as `0x${string}`,
     abi: AppConfig.abiCoin,
     functionName: 'pending',
     args: [props.address],
     onSuccess: (data: BigNumber) => {
       // eslint-disable-next-line no-console
-      console.log('Success - coin', data);
+      console.log('hex num', parseInt(data._hex, 16) / (Math.pow(10,18)))
       // eslint-disable-next-line no-underscore-dangle
-      setCoins(parseInt(data._hex, 16));
+      setCoins(Number(parseInt(data._hex, 16) / (Math.pow(10,18))).toPrecision(4));
     },
   });
 
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState('0');
   useContractRead({
-    address: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e',
+    address: AppConfig.addressCoin as `0x${string}`,
     abi: AppConfig.abiCoin,
     functionName: 'balanceOf',
     args: [props.address],
@@ -41,12 +41,12 @@ const CoinDisplay: FC<Props> = (props) => {
       // eslint-disable-next-line no-console
       // console.log('Success - coin', data);
       // eslint-disable-next-line no-underscore-dangle
-      setBalance(parseInt(data._hex, 16));
+      setBalance(Number(parseInt(data._hex, 16) / (Math.pow(10,18))).toPrecision(4));
     },
   });
 
   const { config } = usePrepareContractWrite({
-    address: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e',
+    address: AppConfig.addressCoin as `0x${string}`,
     abi: AppConfig.abiCoin,
     functionName: 'claim',
   });
@@ -90,8 +90,8 @@ const CoinDisplay: FC<Props> = (props) => {
         progress: undefined,
         theme: 'light',
       });
-      setBalance(balance + coins);
-      setCoins(0);
+      setBalance(Number(Number(balance) + Number(coins)).toString());
+      setCoins('0');
     },
   });
 

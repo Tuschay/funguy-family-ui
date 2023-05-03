@@ -13,7 +13,7 @@ interface Props {
 const TokenDisplay: FC<Props> = (props) => {
   const [balance, setBalance] = useState(0);
   useContractRead({
-    address: '0x1eb43807f17cf22890fda80a55866a65a2984614',
+    address: AppConfig.addressFunguy as `0x${string}`,
     abi: AppConfig.abiFunguy,
     functionName: 'balanceOf',
     args: [props.address],

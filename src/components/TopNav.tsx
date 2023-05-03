@@ -19,7 +19,7 @@ const TopNav = () => {
       // eslint-disable-next-line no-console
       // console.log('Success - coin', data);
       // eslint-disable-next-line no-underscore-dangle
-      setBalance(Number(parseInt(data._hex, 16) / (Math.pow(10,18))).toPrecision(4));
+      setBalance(Number(parseInt(data._hex, 16) / 10 ** 18).toPrecision(4));
     },
   });
   return (

@@ -1,6 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 
-import { BigNumber } from 'ethers';
+import type { BigNumber } from 'ethers';
 import { type FC, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -24,10 +24,9 @@ const CoinDisplay: FC<Props> = (props) => {
     functionName: 'pending',
     args: [props.address],
     onSuccess: (data: BigNumber) => {
-      // eslint-disable-next-line no-console
-      console.log('hex num', parseInt(data._hex, 16) / (Math.pow(10,18)))
       // eslint-disable-next-line no-underscore-dangle
-      setCoins(Number(parseInt(data._hex, 16) / (Math.pow(10,18))).toPrecision(4));
+      const hex = data._hex;
+      setCoins(Number(parseInt(hex, 16) / 10 ** 18).toPrecision(4));
     },
   });
 
@@ -38,10 +37,8 @@ const CoinDisplay: FC<Props> = (props) => {
     functionName: 'balanceOf',
     args: [props.address],
     onSuccess: (data: BigNumber) => {
-      // eslint-disable-next-line no-console
-      // console.log('Success - coin', data);
       // eslint-disable-next-line no-underscore-dangle
-      setBalance(Number(parseInt(data._hex, 16) / (Math.pow(10,18))).toPrecision(4));
+      setBalance(Number(parseInt(data._hex, 16) / 10 ** 18).toPrecision(4));
     },
   });
 

@@ -1,6 +1,7 @@
-import { AppConfig } from '@/utils/AppConfig';
 import Image from 'next/image';
 import { type FC, useEffect, useState } from 'react';
+
+import { AppConfig } from '@/utils/AppConfig';
 
 interface Props {
   id: number;
@@ -37,9 +38,7 @@ const TokenData: FC<Props> = (props) => {
   // });
 
   useEffect(() => {
-    fetch(
-      `https://ipfs.io/ipfs/${AppConfig.ipfsHash}/${props.id}`
-    )
+    fetch(`https://ipfs.io/ipfs/${AppConfig.ipfsHash}/${props.id}`)
       .then((value) => {
         return value.json();
       })

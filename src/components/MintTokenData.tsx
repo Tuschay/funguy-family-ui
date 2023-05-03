@@ -24,9 +24,7 @@ const MintTokenData: FC<Props> = (props) => {
   const [disable, setDisable] = useState(false);
 
   useEffect(() => {
-    fetch(
-      `https://ipfs.io/ipfs/${AppConfig.ipfsHash}/${props.id}`
-    )
+    fetch(`https://ipfs.io/ipfs/${AppConfig.ipfsHash}/${props.id}`)
       .then((value) => {
         return value.json();
       })

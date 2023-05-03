@@ -51,8 +51,7 @@ const CoinDisplay: FC<Props> = (props) => {
   });
   const { write } = useContractWrite({
     ...config,
-    onMutate(args) {
-      console.log('Mutate', { args });
+    onMutate(_args) {
       toast.dismiss();
       toast.info('Claiming $TSHY coins.', {
         position: 'bottom-right',
@@ -65,8 +64,7 @@ const CoinDisplay: FC<Props> = (props) => {
         theme: 'light',
       });
     },
-    onError(error) {
-      console.log('Error', error);
+    onError(_error) {
       toast.dismiss();
       toast.error('Error claiming $TSHY coins. Please try again.', {
         position: 'bottom-right',
@@ -79,8 +77,7 @@ const CoinDisplay: FC<Props> = (props) => {
         theme: 'light',
       });
     },
-    onSuccess(data) {
-      console.log('Success', data);
+    onSuccess(_data) {
       toast.dismiss();
       toast.success('$TSHY coins claimed!', {
         position: 'bottom-right',

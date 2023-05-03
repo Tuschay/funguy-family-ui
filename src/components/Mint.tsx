@@ -4,17 +4,15 @@ import { useAccount } from 'wagmi';
 
 import ClientOnly from '@/hooks/clientOnly';
 
-import CoinDisplay from './CoinDisplay';
-import TokenDisplay from './TokenDisplay';
+import MintDisplay from './MintDisplay';
 
-const Account = () => {
+const Mint = () => {
   const { address } = useAccount();
   return (
     <ClientOnly>
       {address && (
         <>
-          <CoinDisplay address={address} />
-          <TokenDisplay address={address} />
+          <MintDisplay address={address} />
         </>
       )}
       {!address && (
@@ -42,4 +40,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default Mint;

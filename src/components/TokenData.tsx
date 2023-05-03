@@ -1,8 +1,5 @@
 import Image from 'next/image';
-import { type FC, useState } from 'react';
-import { useContractRead } from 'wagmi';
-
-import { AppConfig } from '@/utils/AppConfig';
+import { type FC, useEffect, useState } from 'react';
 
 interface Props {
   id: number;
@@ -17,26 +14,38 @@ interface Metadata {
 
 const TokenData: FC<Props> = (props) => {
   const [token, setToken] = useState({} as Metadata);
-  useContractRead({
-    address: '0x53EF7Dd9087e98406F1f68fb4c23494bDb5cEdA4',
-    abi: AppConfig.abiFunguy,
-    functionName: 'tokenURI',
-    args: [props.id],
-    onSuccess: (data: string) => {
-      // eslint-disable-next-line no-console
-      console.log('Success - tokenURI', data);
-      // eslint-disable-next-line no-underscore-dangle
-      fetch(data.replace('ipfs://', 'https://ipfs.io/ipfs/'))
-        .then((value) => {
-          // console.log('response: ', value.json());
-          return value.json();
-        })
-        .then((value) => {
-          console.log(value);
-          setToken(value);
-        });
-    },
-  });
+  // useContractRead({
+  //   address: '0x53EF7Dd9087e98406F1f68fb4c23494bDb5cEdA4',
+  //   abi: AppConfig.abiFunguy,
+  //   functionName: 'tokenURI',
+  //   args: [props.id],
+  //   onSuccess: (data: string) => {
+  //     // eslint-disable-next-line no-console
+  //     console.log('Success - tokenURI', data);
+  //     // eslint-disable-next-line no-underscore-dangle
+  //     fetch(data.replace('ipfs://', 'https://ipfs.io/ipfs/'))
+  //       .then((value) => {
+  //         // console.log('response: ', value.json());
+  //         return value.json();
+  //       })
+  //       .then((value) => {
+  //         console.log(value);
+  //         setToken(value);
+  //       });
+  //   },
+  // });
+
+  useEffect(() => {
+    fetch(
+      `https://ipfs.io/ipfs/QmQe4UKnTrGg6MKZdYjpTiSz5m8xg8fZcfgcvCZU3MmBZd/${props.id}`
+    )
+      .then((value) => {
+        return value.json();
+      })
+      .then((value) => {
+        setToken(value);
+      });
+  }, []);
 
   const imageUrl = token.image?.replace('ipfs://', 'https://ipfs.io/ipfs/');
 

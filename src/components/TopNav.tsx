@@ -54,6 +54,12 @@ const TopNav = () => {
       <div className="block w-full grow lg:flex lg:w-auto lg:items-center">
         <div className="text-sm lg:grow">
           <Link
+            href="/mint"
+            className="mr-4 mt-4 block text-white hover:text-white lg:mt-0 lg:inline-block"
+          >
+            Mint
+          </Link>
+          <Link
             href="/"
             className="mr-4 mt-4 block text-white hover:text-white lg:mt-0 lg:inline-block"
           >

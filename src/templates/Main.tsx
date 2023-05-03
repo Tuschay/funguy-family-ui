@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { ToastContainer } from 'react-toastify';
 
 import TopNav from '@/components/TopNav';
 
@@ -35,18 +34,6 @@ const Main = (props: IMainProps) => {
           </footer> */}
         </div>
       </div>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
     </>
   );
 };

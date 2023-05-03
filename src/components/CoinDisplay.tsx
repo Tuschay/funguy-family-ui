@@ -18,13 +18,14 @@ interface Props {
 const CoinDisplay: FC<Props> = (props) => {
   const [coins, setCoins] = useState(0);
   useContractRead({
+    // address: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e',
     address: '0x7B093653Bf2f9A9812c8b4D67FcDb7183857B288',
     abi: AppConfig.abiCoin,
     functionName: 'pending',
     args: [props.address],
     onSuccess: (data: BigNumber) => {
       // eslint-disable-next-line no-console
-      console.log('Success - coin', data);
+      // console.log('Success - coin', data);
       // eslint-disable-next-line no-underscore-dangle
       setCoins(parseInt(data._hex, 16));
     },
@@ -32,20 +33,20 @@ const CoinDisplay: FC<Props> = (props) => {
 
   const [balance, setBalance] = useState(0);
   useContractRead({
-    address: '0x7B093653Bf2f9A9812c8b4D67FcDb7183857B288',
+    address: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e',
     abi: AppConfig.abiCoin,
     functionName: 'balanceOf',
     args: [props.address],
     onSuccess: (data: BigNumber) => {
       // eslint-disable-next-line no-console
-      console.log('Success - coin', data);
+      // console.log('Success - coin', data);
       // eslint-disable-next-line no-underscore-dangle
       setBalance(parseInt(data._hex, 16));
     },
   });
 
   const { config } = usePrepareContractWrite({
-    address: '0x7B093653Bf2f9A9812c8b4D67FcDb7183857B288',
+    address: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e',
     abi: AppConfig.abiCoin,
     functionName: 'claim',
   });

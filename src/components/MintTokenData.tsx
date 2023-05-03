@@ -38,7 +38,7 @@ const MintTokenData: FC<Props> = (props) => {
   const imageUrl = token.image?.replace('ipfs://', 'https://ipfs.io/ipfs/');
 
   const { config, isFetchedAfterMount } = usePrepareContractWrite({
-    address: '0x53EF7Dd9087e98406F1f68fb4c23494bDb5cEdA4',
+    address: '0x1eb43807f17cf22890fda80a55866a65a2984614',
     abi: AppConfig.abiFunguy,
     functionName: 'mint',
     args: [props.id],

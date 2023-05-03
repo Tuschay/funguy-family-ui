@@ -13,13 +13,13 @@ interface Props {
 const TokenDisplay: FC<Props> = (props) => {
   const [balance, setBalance] = useState(0);
   useContractRead({
-    address: '0x53EF7Dd9087e98406F1f68fb4c23494bDb5cEdA4',
+    address: '0x1eb43807f17cf22890fda80a55866a65a2984614',
     abi: AppConfig.abiFunguy,
     functionName: 'balanceOf',
     args: [props.address],
     onSuccess: (data: BigNumber) => {
       // eslint-disable-next-line no-console
-      console.log('Success - token', data);
+      // console.log('Success - token', data);
       // eslint-disable-next-line no-underscore-dangle
       setBalance(parseInt(data._hex, 16));
     },

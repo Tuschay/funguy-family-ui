@@ -15,7 +15,7 @@ interface Metadata {
 const TokenData: FC<Props> = (props) => {
   const [token, setToken] = useState({} as Metadata);
   // useContractRead({
-  //   address: '0x53EF7Dd9087e98406F1f68fb4c23494bDb5cEdA4',
+  //   address: '0x1eb43807f17cf22890fda80a55866a65a2984614',
   //   abi: AppConfig.abiFunguy,
   //   functionName: 'tokenURI',
   //   args: [props.id],

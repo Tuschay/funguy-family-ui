@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { type FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -44,12 +44,12 @@ const MintTokenData: FC<Props> = (props) => {
     args: [props.id],
     overrides: {
       value: ethers.utils.parseEther('0.025'),
+      gasLimit: BigNumber.from(Number(144000 * 1.2).toString()),
     },
     scopeKey: 'mintToken',
   });
   const { write } = useContractWrite({
     ...config,
-    mode: 'recklesslyUnprepared',
     onMutate(_args) {
       toast.dismiss();
       toast.info(`Minting FunguyFamily #${props.id}`, {

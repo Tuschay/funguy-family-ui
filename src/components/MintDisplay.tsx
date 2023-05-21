@@ -16,12 +16,11 @@ const MintDisplay: FC<Props> = (props) => {
   const [page, setPage] = useState(0);
   const MAX_PAGES = 2500 / 8;
   const { data, fetchNextPage } = useContractInfiniteReads({
-    cacheKey: 'ownerOf',
+    cacheKey: 'ownerOfMintDisplay',
     ...paginatedIndexesConfig(
       (index) => {
         return [
           {
-            // address: '0x53EF7Dd9087e98406F1f68fb4c23494bDb5cEdA4',
             address: AppConfig.addressFunguy as `0x${string}`,
             abi: AppConfig.abiFunguy,
             functionName: 'ownerOf',

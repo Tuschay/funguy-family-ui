@@ -41,7 +41,7 @@ const MintTokenData: FC<Props> = (props) => {
     functionName: 'mint',
     args: [props.id],
     overrides: {
-      value: ethers.utils.parseEther('0.025'),
+      value: ethers.utils.parseEther('50'),
       gasLimit: BigNumber.from(Number(144000 * 1.2).toString()),
     },
     scopeKey: 'mintToken',

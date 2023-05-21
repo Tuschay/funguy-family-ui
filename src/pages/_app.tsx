@@ -7,8 +7,9 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import type { AppProps } from 'next/app';
+import { polygon } from 'viem/chains';
 // import type { Chain } from 'wagmi';
-import { configureChains, createClient, goerli, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 
 // const stealthTest: Chain = {
@@ -49,8 +50,9 @@ import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, provider } = configureChains(
   [
+    polygon,
     // mainnet,
-    goerli,
+    // goerli,
     // stealthTest,
   ],
   [

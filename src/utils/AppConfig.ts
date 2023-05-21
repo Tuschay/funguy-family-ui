@@ -5,9 +5,11 @@ export const AppConfig = {
   title: 'Wallet',
   description: 'View your FunguyFamily and $TSHY tokens.',
   locale: 'en',
-  addressFunguy: '0x1eb43807f17cf22890fda80a55866a65a2984614',
+  addressFunguy: '0x5336A776AC749ab1Fe1817777D5F0B6ad5C3471A', // Mainnet
+  addressCoin: '0xA113Da0149Cdee19E835b796A7D94aAA9AbF6EEd', // Mainnet
+  // addressFunguy: '0x1eb43807f17cf22890fda80a55866a65a2984614', // Goerli
+  // addressCoin: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e', // Goerli
   // addressFunguy: '0x53EF7Dd9087e98406F1f68fb4c23494bDb5cEdA4', // ST
-  addressCoin: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e',
   // addressCoin: '0x7B093653Bf2f9A9812c8b4D67FcDb7183857B288', // ST
   ipfsHash: 'QmQe4UKnTrGg6MKZdYjpTiSz5m8xg8fZcfgcvCZU3MmBZd',
   abiFunguy: [

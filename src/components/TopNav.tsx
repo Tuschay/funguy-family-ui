@@ -17,10 +17,8 @@ const TopNav = () => {
     functionName: 'balanceOf',
     args: [address],
     onSuccess: (data: BigNumber) => {
-      // eslint-disable-next-line no-console
-      // console.log('Success - coin', data);
       // eslint-disable-next-line no-underscore-dangle
-      setBalance(Number(parseInt(data._hex, 16) / 10 ** 18).toPrecision(4));
+      setBalance(Number(parseInt(data._hex, 16) / 10 ** 18).toFixed(2));
     },
   });
   return (

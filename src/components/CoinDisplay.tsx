@@ -18,7 +18,6 @@ interface Props {
 const CoinDisplay: FC<Props> = (props) => {
   const [coins, setCoins] = useState('0');
   useContractRead({
-    // address: '0x7B093653Bf2f9A9812c8b4D67FcDb7183857B288',
     address: AppConfig.addressCoin as `0x${string}`,
     abi: AppConfig.abiCoin,
     functionName: 'pending',
@@ -26,7 +25,7 @@ const CoinDisplay: FC<Props> = (props) => {
     onSuccess: (data: BigNumber) => {
       // eslint-disable-next-line no-underscore-dangle
       const hex = data._hex;
-      setCoins(Number(parseInt(hex, 16) / 10 ** 18).toPrecision(4));
+      setCoins(Number(parseInt(hex, 16) / 10 ** 18).toFixed(2));
     },
   });
 
@@ -38,7 +37,7 @@ const CoinDisplay: FC<Props> = (props) => {
     args: [props.address],
     onSuccess: (data: BigNumber) => {
       // eslint-disable-next-line no-underscore-dangle
-      setBalance(Number(parseInt(data._hex, 16) / 10 ** 18).toPrecision(4));
+      setBalance(Number(parseInt(data._hex, 16) / 10 ** 18).toFixed(2));
     },
   });
 

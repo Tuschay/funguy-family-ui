@@ -12,8 +12,10 @@ interface Props {
 }
 
 const MintDisplay: FC<Props> = (props) => {
-  const result: JSX.Element[] = [];
+  const resultAll: JSX.Element[] = [];
+  const resultUnsold: JSX.Element[] = [];
   const [page, setPage] = useState(0);
+  const [showAll, setShowAll] = useState(true);
   const MAX_PAGES = 2500 / 8;
   const { data, fetchNextPage } = useContractInfiniteReads({
     cacheKey: 'ownerOfMintDisplay',
@@ -36,7 +38,7 @@ const MintDisplay: FC<Props> = (props) => {
     if (index > 0) {
       const soldObj = data!.pages! || {};
       const soldRow = soldObj[Math.floor((index - 1) / 16)]!;
-      result.push(
+      resultAll.push(
         <MintToken
           key={index}
           address={props.address}
@@ -44,6 +46,16 @@ const MintDisplay: FC<Props> = (props) => {
           sold={(soldRow && soldRow[(index - 1) % 16]) as boolean}
         />
       );
+      if (!(soldRow && soldRow[(index - 1) % 16])) {
+        resultUnsold.push(
+          <MintToken
+            key={index}
+            address={props.address}
+            id={index}
+            sold={(soldRow && soldRow[(index - 1) % 16]) as boolean}
+          />
+        );
+      }
     }
   });
 
@@ -80,10 +92,29 @@ const MintDisplay: FC<Props> = (props) => {
           </div>
         }
       >
-        <div className="grid grid-cols-4 gap-4">
-          {result.map((item) => {
-            return item;
-          })}
+        <div className="flex flex-col">
+          <label className="relative mb-4 inline-flex cursor-pointer items-center">
+            <input
+              type="checkbox"
+              value=""
+              className="peer sr-only"
+              onChange={() => setShowAll(!showAll)}
+            />
+            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              {showAll ? 'Show available' : 'Show all'}
+            </span>
+          </label>
+
+          <div className="grid grid-cols-4 gap-4">
+            {showAll
+              ? resultAll.map((item) => {
+                  return item;
+                })
+              : resultUnsold.map((item) => {
+                  return item;
+                })}
+          </div>
         </div>
       </InfiniteScroll>
     </div>

@@ -7,7 +7,7 @@ const Tokens = () => {
     <Main
       meta={<Meta title="Funguy Family Mint" description="Funguy Family" />}
       title="Mint"
-      description="Choose any FunguyFamily below for 0.025ETH."
+      description="Choose any FunguyFamily below for 50 MATIC."
     >
       <Mint />
     </Main>

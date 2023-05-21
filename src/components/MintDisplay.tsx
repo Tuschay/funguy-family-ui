@@ -16,9 +16,9 @@ const MintDisplay: FC<Props> = (props) => {
   const resultUnsold: JSX.Element[] = [];
   const [page, setPage] = useState(0);
   const [showAll, setShowAll] = useState(true);
-  const MAX_PAGES = 2500 / 8;
+  const MAX_PAGES = 2500 / 16;
   const { data, fetchNextPage } = useContractInfiniteReads({
-    cacheKey: 'ownerOfMintDisplay',
+    cacheKey: 'wownerOfMintDisplay',
     ...paginatedIndexesConfig(
       (index) => {
         return [
@@ -30,29 +30,29 @@ const MintDisplay: FC<Props> = (props) => {
           },
         ];
       },
-      { start: 1, perPage: 16, direction: 'increment' }
+      { start: 1, perPage: 32, direction: 'increment' }
     ),
   });
 
-  [...Array(page * 8)].forEach((_, index) => {
+  [...Array(page * 16)].forEach((_, index) => {
     if (index > 0) {
       const soldObj = data!.pages! || {};
-      const soldRow = soldObj[Math.floor((index - 1) / 16)]!;
+      const soldRow = soldObj[Math.floor((index - 1) / 32)]!;
       resultAll.push(
         <MintToken
           key={index}
           address={props.address}
           id={index}
-          sold={(soldRow && soldRow[(index - 1) % 16]) as boolean}
+          sold={(soldRow && soldRow[(index - 1) % 32]) as boolean}
         />
       );
-      if (!(soldRow && soldRow[(index - 1) % 16])) {
+      if (!(soldRow && soldRow[(index - 1) % 32])) {
         resultUnsold.push(
           <MintToken
             key={index}
             address={props.address}
             id={index}
-            sold={(soldRow && soldRow[(index - 1) % 16]) as boolean}
+            sold={(soldRow && soldRow[(index - 1) % 32]) as boolean}
           />
         );
       }
@@ -74,7 +74,7 @@ const MintDisplay: FC<Props> = (props) => {
           <div role="status" className="m-6 w-fit">
             <svg
               aria-hidden="true"
-              className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+              className="mr-2 h-8 w-8 animate-spin fill-black text-gray-200 dark:text-gray-600"
               viewBox="0 0 100 101"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -100,7 +100,7 @@ const MintDisplay: FC<Props> = (props) => {
               className="peer sr-only"
               onChange={() => setShowAll(!showAll)}
             />
-            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-black peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-black"></div>
             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
               {showAll ? 'Show available' : 'Show all'}
             </span>

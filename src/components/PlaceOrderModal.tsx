@@ -1,6 +1,8 @@
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import type { ChangeEvent, FormEvent } from 'react';
 import React, { useState } from 'react';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { useAccount } from 'wagmi';
 
 import Input from './Input';
 
@@ -30,6 +32,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
   productPrice,
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
+  const { isConnected } = useAccount();
 
   const [formData, setFormData] = useState<FormData>({
     address1: '',
@@ -204,12 +207,22 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
               <h2 className="mb-4 text-xl font-medium">Step 2: Buy Product</h2>
               <div className="mb-4 grid w-full grid-cols-2 gap-4">
                 {/* Button 1: Display the product price */}
-                <button
-                  type="button"
-                  className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                >
-                  {productPrice} $TSHY
-                </button>
+                {isConnected ? (
+                  <button
+                    type="button"
+                    className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                  >
+                    {productPrice} $TSHY
+                  </button>
+                ) : (
+                  <ConnectButton
+                    showBalance={false}
+                    accountStatus={{
+                      smallScreen: 'avatar',
+                      largeScreen: 'full',
+                    }}
+                  />
+                )}
 
                 {/* Button 2: Purchase Shipping Button */}
                 <button

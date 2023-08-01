@@ -10,6 +10,19 @@ type ProductType = {
   image: string;
 };
 
+interface FormData {
+  address1: string;
+  address2: string;
+  city: string;
+  countryCode: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  province: string;
+  provinceCode: string;
+  zip: string;
+}
+
 const Product: React.FC<{ product: ProductType }> = ({ product }) => {
   const [showModal, setShowModal] = useState(false);
 
@@ -21,7 +34,7 @@ const Product: React.FC<{ product: ProductType }> = ({ product }) => {
     setShowModal(false);
   };
 
-  const handleSaveFormData = (formData) => {
+  const handleSaveFormData = (formData: FormData) => {
     // Handle the form data here, e.g., save it to the server
     console.log(formData);
   };

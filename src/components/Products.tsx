@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { TbFaceIdError } from 'react-icons/tb';
 import Client from 'shopify-buy';
 
 import Product from './Product';
@@ -39,7 +40,8 @@ const Products: React.FC = () => {
 
   if (productError || !shopifyProducts.length) {
     return (
-      <div className="text-center">
+      <div className="rounded-md bg-slate-100 p-16 text-center">
+        <TbFaceIdError className="w-full text-6xl" />
         <p>Merch not available at this time</p>
       </div>
     );

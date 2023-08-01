@@ -1,7 +1,8 @@
+import Products from '@/components/Products';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';
 
-const About = () => (
+const Shop = () => (
   <Main
     meta={
       <Meta
@@ -12,8 +13,8 @@ const About = () => (
     title="Shop"
     description="Exchange your $TSHY coins for physical items."
   >
-    <p>Coming Soon!</p>
+    <Products />
   </Main>
 );
 
-export default About;
+export default Shop;

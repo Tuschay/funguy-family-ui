@@ -138,7 +138,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                   </button>
                 )}
               </div>
-              <div className="mt-4">
+              <div className="mt-6">
                 <button
                   type="button"
                   onClick={handlePrevStep}

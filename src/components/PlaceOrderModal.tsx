@@ -8,13 +8,13 @@ import { useAccount } from 'wagmi';
 interface PlaceOrderModalProps {
   onClose: () => void;
   productVariantId: string;
-  productPrice: number;
+  productTSHYPrice: string;
   client: any;
 }
 
 const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
   onClose,
-  productPrice,
+  productTSHYPrice,
   productVariantId,
   client,
 }) => {
@@ -67,7 +67,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
       className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-lg"
       onClick={handleBackgroundClick}
     >
-      {productPrice && (
+      {productTSHYPrice && (
         <div
           className="relative mx-2 w-full max-w-xl overflow-y-auto rounded-lg bg-white p-6 pt-12"
           style={{ maxHeight: '80vh' }}
@@ -105,7 +105,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                     type="button"
                     className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
                   >
-                    {approved ? `${productPrice} $TSHY` : `Approve TSHY`}
+                    {approved ? `${productTSHYPrice} $TSHY` : `Approve TSHY`}
                   </button>
                 ) : (
                   <ConnectButton

@@ -2,28 +2,12 @@ import { useState } from 'react';
 
 import PlaceOrderModal from './PlaceOrderModal';
 
-type ProductType = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
+type ProductProps = {
+  product: any;
+  client: any;
 };
 
-interface FormData {
-  address1: string;
-  address2: string;
-  city: string;
-  countryCode: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  province: string;
-  provinceCode: string;
-  zip: string;
-}
-
-const Product: React.FC<{ product: ProductType }> = ({ product }) => {
+const Product: React.FC<ProductProps> = ({ product, client }) => {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => {
@@ -34,20 +18,15 @@ const Product: React.FC<{ product: ProductType }> = ({ product }) => {
     setShowModal(false);
   };
 
-  const handleSaveFormData = (formData: FormData) => {
-    // Handle the form data here, e.g., save it to the server
-    console.log(formData);
-  };
-
   return (
     <div className="flex h-full flex-col rounded-lg border p-4 shadow-md">
       <div className="flex-1">
         <img
-          src={product.image}
-          alt={product.name}
+          src={product.images[0].src}
+          alt={product.title}
           className="mb-4 h-auto w-full object-cover"
         />
-        <h2 className="mb-2 text-lg font-bold">{product.name}</h2>
+        <h2 className="mb-2 text-lg font-bold">{product.title}</h2>
         <p className="text-gray-600">{product.description}</p>
       </div>
       <div className="mt-4 flex items-center justify-between">
@@ -60,10 +39,10 @@ const Product: React.FC<{ product: ProductType }> = ({ product }) => {
         </button>
         {showModal && (
           <PlaceOrderModal
-            productId={product.id}
-            productPrice={product.price}
+            productPrice={999}
+            productVariantId={product.variants[0].id}
             onClose={handleCloseModal}
-            onSave={handleSaveFormData}
+            client={client}
           />
         )}
       </div>

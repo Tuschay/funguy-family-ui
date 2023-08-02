@@ -69,7 +69,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     >
       {productPrice && (
         <div
-          className="relative w-full max-w-xl overflow-y-auto rounded-lg bg-white p-6 pt-12"
+          className="relative mx-2 w-full max-w-xl overflow-y-auto rounded-lg bg-white p-6 pt-12"
           style={{ maxHeight: '80vh' }}
         >
           <AiOutlineCloseCircle
@@ -119,7 +119,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
 
                 {/* Button 2: Purchase Shipping Button */}
                 <h3 className="mt-2">Purchase shipping with Shopify</h3>
-                {shopifyShippingUrl ? (
+                {shopifyShippingUrl && approved ? (
                   <a
                     href={shopifyShippingUrl}
                     target="_blank"
@@ -132,7 +132,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                   <button
                     type="button"
                     disabled
-                    className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                    className="cursor-not-allowed rounded-md bg-blue-500 px-4 py-2 text-white opacity-50 hover:bg-blue-600"
                   >
                     Purchase Shipping
                   </button>

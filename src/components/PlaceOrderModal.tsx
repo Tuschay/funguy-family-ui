@@ -1,55 +1,52 @@
-import type { ChangeEvent, FormEvent } from 'react';
+/* eslint-disable tailwindcss/migration-from-tailwind-2 */
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useState } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { AiOutlineCloseCircle } from 'react-icons/ai';
-
-import Input from './Input';
-
-interface FormData {
-  address1: string;
-  address2: string;
-  city: string;
-  countryCode: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  province: string;
-  provinceCode: string;
-  zip: string;
-}
+import { useAccount } from 'wagmi';
 
 interface PlaceOrderModalProps {
   onClose: () => void;
-  onSave: (formData: FormData) => void;
-  productId: number;
-  productPrice: number;
+  productVariantId: string;
+  productTSHYPrice: string;
+  client: any;
 }
 
 const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
   onClose,
-  onSave,
-  productPrice,
+  productTSHYPrice,
+  productVariantId,
+  client,
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
+  const [shopifyShippingUrl, setShopifyShippingUrl] = useState<string | null>(
+    null
+  );
+  const { isConnected } = useAccount();
 
-  const [formData, setFormData] = useState<FormData>({
-    address1: '',
-    address2: '',
-    city: '',
-    countryCode: '',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    province: '',
-    provinceCode: '',
-    zip: '',
-  });
+  const handleNextStep = async () => {
+    if (currentStep === 1) {
+      const checkout = await client.checkout.create();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  };
+      const checkoutId = checkout.id;
 
-  const handleNextStep = () => {
+      const lineItemsToAdd = [
+        {
+          variantId: productVariantId,
+          quantity: 1,
+        },
+      ];
+
+      const addedItemCheckout = await client.checkout.addLineItems(
+        checkoutId,
+        lineItemsToAdd
+      );
+
+      const { webUrl } = addedItemCheckout;
+
+      setShopifyShippingUrl(webUrl);
+    }
+
     setCurrentStep(currentStep + 1);
   };
 
@@ -57,37 +54,22 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     setCurrentStep(currentStep - 1);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (currentStep === 1) {
-      handleNextStep(); // Proceed to the next step if the current step is 1
-    } else if (currentStep === 2) {
-      // You can add any additional processing or validation for Step 2 here if needed
-      handleNextStep();
-    } else {
-      // Save the form data or handle the completion of the order here
-      onSave(formData); // Pass the form data to the parent component
-      setTimeout(() => {
-        onClose(); // Close the modal after a few seconds
-      }, 3000);
-    }
-  };
-
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Close the modal when clicking anywhere in the blurred background
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
+
+  const approved = false;
 
   return (
     <div
       className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-lg"
       onClick={handleBackgroundClick}
     >
-      {productPrice && (
+      {productTSHYPrice && (
         <div
-          className="relative w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 pt-12"
+          className="relative mx-2 w-full max-w-xl overflow-y-auto rounded-lg bg-white p-6 pt-12"
           style={{ maxHeight: '80vh' }}
         >
           <AiOutlineCloseCircle
@@ -96,130 +78,67 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
           />
           {currentStep === 1 && (
             <>
-              <h2 className="mb-4 text-xl font-medium">
-                Step 1: Shipping Info
-              </h2>
-              <form
-                className="grid gap-4 md:grid-cols-2"
-                onSubmit={handleSubmit}
-              >
-                <Input
-                  label="First Name"
-                  name="firstName"
-                  type="text"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  required
-                />
-                <Input
-                  label="Last Name"
-                  name="lastName"
-                  type="text"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  required
-                />
-                <Input
-                  label="Address Line 1"
-                  name="address1"
-                  type="text"
-                  value={formData.address1}
-                  onChange={handleChange}
-                  className="md:col-span-2"
-                  required
-                />
-                <Input
-                  label="Address Line 2"
-                  name="address2"
-                  type="text"
-                  value={formData.address2}
-                  onChange={handleChange}
-                  className="md:col-span-2"
-                />
-                <Input
-                  label="City"
-                  name="city"
-                  type="text"
-                  value={formData.city}
-                  onChange={handleChange}
-                  required
-                />
-                <Input
-                  label="Zip"
-                  name="zip"
-                  type="text"
-                  value={formData.zip}
-                  onChange={handleChange}
-                  required
-                />
-                <Input
-                  label="Country Code"
-                  name="countryCode"
-                  type="text"
-                  value={formData.countryCode}
-                  onChange={handleChange}
-                />
-                <Input
-                  label="Phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                />
-                <Input
-                  label="Province"
-                  name="province"
-                  type="text"
-                  value={formData.province}
-                  onChange={handleChange}
-                />
-                <Input
-                  label="Province Code"
-                  name="provinceCode"
-                  type="text"
-                  value={formData.provinceCode}
-                  onChange={handleChange}
-                />
-
-                <div className="col-span-2 flex justify-between">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="rounded-md bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                  >
-                    Next
-                  </button>
-                </div>
-              </form>
+              <h2 className="mb-4 text-xl font-medium">Step 1: Overview</h2>
+              <p>
+                On the next step, first complete the TSHY transaction. Once the
+                transaction is completed, you can purchase shipping via Shopify.
+              </p>
+              <div className="mt-4 flex w-full justify-end">
+                <button
+                  type="button"
+                  onClick={handleNextStep}
+                  className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                >
+                  Next
+                </button>
+              </div>
             </>
           )}
           {currentStep === 2 && (
             <div>
               <h2 className="mb-4 text-xl font-medium">Step 2: Buy Product</h2>
-              <div className="mb-4 grid w-full grid-cols-2 gap-4">
+              <div className="mb-4 grid w-full grid-cols-1 gap-4">
+                <h3 className="mt-2">Connect wallet and purchase with TSHY</h3>
                 {/* Button 1: Display the product price */}
-                <button
-                  type="button"
-                  className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                >
-                  {productPrice} $TSHY
-                </button>
+                {isConnected ? (
+                  <button
+                    type="button"
+                    className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                  >
+                    {approved ? `${productTSHYPrice} $TSHY` : `Approve TSHY`}
+                  </button>
+                ) : (
+                  <ConnectButton
+                    showBalance={false}
+                    accountStatus={{
+                      smallScreen: 'avatar',
+                      largeScreen: 'full',
+                    }}
+                  />
+                )}
 
                 {/* Button 2: Purchase Shipping Button */}
-                <button
-                  type="button"
-                  className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                >
-                  Purchase Shipping
-                </button>
+                <h3 className="mt-2">Purchase shipping with Shopify</h3>
+                {shopifyShippingUrl && approved ? (
+                  <a
+                    href={shopifyShippingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-md bg-blue-500 px-4 py-2 text-center text-white hover:bg-blue-600"
+                  >
+                    Purchase Shipping
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    disabled
+                    className="cursor-not-allowed rounded-md bg-blue-500 px-4 py-2 text-white opacity-50 hover:bg-blue-600"
+                  >
+                    Purchase Shipping
+                  </button>
+                )}
               </div>
-              <div className="mt-4">
+              <div className="mt-6">
                 <button
                   type="button"
                   onClick={handlePrevStep}

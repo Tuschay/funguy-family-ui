@@ -4826,6 +4826,11 @@
     "@types/mime" "*"
     "@types/node" "*"
 
+"@types/shopify-buy@^2.17.1":
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/@types/shopify-buy/-/shopify-buy-2.17.1.tgz#c2f1a94d615ca83d1127135a098bd73cda57939c"
+  integrity sha512-R/LzVK/Beqsex2dccSY2rfm4AFAVuqJ177LVl18bVNtxQO78WGTgsVZKDEOaugW9ap3hm+w2XvGFBFp3XeMRvw==
+
 "@types/sinonjs__fake-timers@8.1.1":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-8.1.1.tgz#b49c2c70150141a15e0fa7e79cf1f92a72934ce3"
@@ -15669,6 +15674,11 @@ shelljs@^0.8.5:
     glob "^7.0.0"
     interpret "^1.0.0"
     rechoir "^0.6.2"
+
+shopify-buy@^2.20.1:
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/shopify-buy/-/shopify-buy-2.20.1.tgz#82ad1be59d4cd1a4f2f1972e004a198723059241"
+  integrity sha512-8hIaHQld8V4hKOhYJ+LxXDpt/Y5evYM3EB9v7ZDXap+tbRqyWQq/YjgTqjh1cTM7t3BMWylhxqsFx+NR9YQ9yw==
 
 side-channel@^1.0.4:
   version "1.0.4"

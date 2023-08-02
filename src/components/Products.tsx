@@ -28,6 +28,7 @@ const Products: React.FC = () => {
         setShopifyProducts(products);
       },
       (error) => {
+        // eslint-disable-next-line no-console
         console.error('Error fetching products:', error);
       }
     );

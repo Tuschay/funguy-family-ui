@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/migration-from-tailwind-2 */
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -59,6 +60,8 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     }
   };
 
+  const approved = false;
+
   return (
     <div
       className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-lg"
@@ -102,7 +105,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                     type="button"
                     className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
                   >
-                    {productPrice} $TSHY
+                    {approved ? `${productPrice} $TSHY` : `Approve TSHY`}
                   </button>
                 ) : (
                   <ConnectButton

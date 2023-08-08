@@ -1,9 +1,20 @@
 /* eslint-disable tailwindcss/migration-from-tailwind-2 */
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { BigNumber, ethers } from 'ethers';
 import React, { useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AiOutlineCloseCircle } from 'react-icons/ai';
-import { useAccount } from 'wagmi';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { FaSpinner } from 'react-icons/fa';
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from 'wagmi';
+
+import { AppConfig } from '@/utils/AppConfig';
 
 interface PlaceOrderModalProps {
   onClose: () => void;
@@ -22,7 +33,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
   const [shopifyShippingUrl, setShopifyShippingUrl] = useState<string | null>(
     null
   );
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
 
   const handleNextStep = async () => {
     if (currentStep === 1) {
@@ -60,7 +71,55 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     }
   };
 
-  const approved = false;
+  // Get the token allowance for the current user
+  const { data: tokenAllowance } = useContractRead({
+    address: AppConfig.addressTestCoin as `0x${string}`,
+    abi: AppConfig.abiTestToken,
+    functionName: 'allowance',
+    args: [address, AppConfig.addressTestMerchandiseSale],
+  });
+
+  const productPriceContract = ethers.utils.parseUnits(productTSHYPrice);
+
+  const { config: approveTokenConfig } = usePrepareContractWrite({
+    address: AppConfig.addressTestCoin as `0x${string}`,
+    abi: AppConfig.abiTestToken,
+    functionName: 'approve',
+    args: [AppConfig.addressTestMerchandiseSale, productPriceContract],
+    overrides: {
+      gasLimit: BigNumber.from(Number(144000 * 1.2).toString()),
+    },
+  });
+
+  const { write: approveWrite, data: approveTokenData } = useContractWrite({
+    ...approveTokenConfig,
+  });
+
+  const { isLoading: isPendingApproval, isSuccess: isSuccessApproval } =
+    useWaitForTransaction({
+      hash: approveTokenData?.hash,
+    });
+
+  const needsApproval = Number(tokenAllowance) < Number(productTSHYPrice);
+
+  const { config: buyProductConfig } = usePrepareContractWrite({
+    address: AppConfig.addressTestMerchandiseSale as `0x${string}`,
+    abi: AppConfig.abiTestMerchandiseSale,
+    functionName: 'buyProduct',
+    args: [productPriceContract],
+    overrides: {
+      gasLimit: BigNumber.from(Number(144000 * 1.2).toString()),
+    },
+  });
+
+  const { write: buyWrite, data: buyProductData } = useContractWrite({
+    ...buyProductConfig,
+  });
+
+  const { isLoading: isPendingBuy, isSuccess: isSuccessBuy } =
+    useWaitForTransaction({
+      hash: buyProductData?.hash,
+    });
 
   return (
     <div
@@ -103,9 +162,24 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                 {isConnected ? (
                   <button
                     type="button"
-                    className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                    className={`flex items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 ${
+                      isPendingApproval || isPendingBuy || isSuccessBuy
+                        ? 'cursor-not-allowed opacity-70'
+                        : ''
+                    }`}
+                    onClick={() =>
+                      needsApproval ? approveWrite?.() : buyWrite?.()
+                    }
+                    disabled={isPendingApproval || isPendingBuy || isSuccessBuy}
                   >
-                    {approved ? `${productTSHYPrice} $TSHY` : `Approve TSHY`}
+                    {!needsApproval
+                      ? `${productTSHYPrice} $TSHY`
+                      : `Approve TSHY`}
+                    {(isPendingApproval || isPendingBuy) && (
+                      <span className="ml-2">
+                        <FaSpinner className="animate-spin" />
+                      </span>
+                    )}
                   </button>
                 ) : (
                   <ConnectButton
@@ -119,7 +193,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
 
                 {/* Button 2: Purchase Shipping Button */}
                 <h3 className="mt-2">Purchase shipping with Shopify</h3>
-                {shopifyShippingUrl && approved ? (
+                {shopifyShippingUrl && isSuccessBuy ? (
                   <a
                     href={shopifyShippingUrl}
                     target="_blank"
@@ -132,7 +206,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                   <button
                     type="button"
                     disabled
-                    className="cursor-not-allowed rounded-md bg-blue-500 px-4 py-2 text-white opacity-50 hover:bg-blue-600"
+                    className="cursor-not-allowed rounded-md bg-blue-500/50 px-4 py-2 text-white opacity-50 hover:bg-blue-600"
                   >
                     Purchase Shipping
                   </button>
@@ -147,12 +221,6 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                   Back
                 </button>
               </div>
-            </div>
-          )}
-          {currentStep === 3 && (
-            <div>
-              <h2 className="mb-4 text-xl font-medium">Order Completed</h2>
-              <p className="text-green-500">Thank you for your order!</p>
             </div>
           )}
         </div>

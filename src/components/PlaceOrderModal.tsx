@@ -77,7 +77,13 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     abi: AppConfig.abiTestToken,
     functionName: 'allowance',
     args: [address, AppConfig.addressTestMerchandiseSale],
+    watch: true,
   });
+
+  const tokenAllowanceParsed = ethers.utils.formatEther(
+    tokenAllowance as BigNumber
+  );
+  console.log('tokenAllowance', tokenAllowanceParsed);
 
   const productPriceContract = ethers.utils.parseUnits(productTSHYPrice);
 
@@ -95,12 +101,13 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     ...approveTokenConfig,
   });
 
-  const { isLoading: isPendingApproval, isSuccess: isSuccessApproval } =
-    useWaitForTransaction({
-      hash: approveTokenData?.hash,
-    });
+  const { isLoading: isPendingApproval } = useWaitForTransaction({
+    hash: approveTokenData?.hash,
+  });
 
-  const needsApproval = Number(tokenAllowance) < Number(productTSHYPrice);
+  // useEffect(() => {}, [isSuccessApproval]);
+
+  const needsApproval = Number(tokenAllowanceParsed) < Number(productTSHYPrice);
 
   const { config: buyProductConfig } = usePrepareContractWrite({
     address: AppConfig.addressTestMerchandiseSale as `0x${string}`,
@@ -139,8 +146,13 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
             <>
               <h2 className="mb-4 text-xl font-medium">Step 1: Overview</h2>
               <p>
-                On the next step, first complete the TSHY transaction. Once the
-                transaction is completed, you can purchase shipping via Shopify.
+                On the next step, complete TSHY token approval and TSHY
+                transaction. Once the transaction is completed, you complete the
+                order by buying shipping via Shopify.
+              </p>
+              <p className="mt-4">
+                Don&lsquo;t close the window until the transaction is completed
+                and you have purchased shipping.
               </p>
               <div className="mt-4 flex w-full justify-end">
                 <button
@@ -160,27 +172,44 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                 <h3 className="mt-2">Connect wallet and purchase with TSHY</h3>
                 {/* Button 1: Display the product price */}
                 {isConnected ? (
-                  <button
-                    type="button"
-                    className={`flex items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 ${
-                      isPendingApproval || isPendingBuy || isSuccessBuy
-                        ? 'cursor-not-allowed opacity-70'
-                        : ''
-                    }`}
-                    onClick={() =>
-                      needsApproval ? approveWrite?.() : buyWrite?.()
-                    }
-                    disabled={isPendingApproval || isPendingBuy || isSuccessBuy}
-                  >
-                    {!needsApproval
-                      ? `${productTSHYPrice} $TSHY`
-                      : `Approve TSHY`}
-                    {(isPendingApproval || isPendingBuy) && (
-                      <span className="ml-2">
-                        <FaSpinner className="animate-spin" />
-                      </span>
-                    )}
-                  </button>
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      type="button"
+                      className={`flex items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 ${
+                        isPendingApproval || !needsApproval || isSuccessBuy
+                          ? 'cursor-not-allowed opacity-70'
+                          : ''
+                      }`}
+                      onClick={() => approveWrite?.()}
+                      disabled={
+                        isPendingApproval || !needsApproval || isSuccessBuy
+                      }
+                    >
+                      Approve TSHY
+                      {isPendingApproval && (
+                        <span className="ml-2">
+                          <FaSpinner className="animate-spin" />
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      className={`flex items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 ${
+                        needsApproval || isPendingBuy || isSuccessBuy
+                          ? 'cursor-not-allowed opacity-70'
+                          : ''
+                      }`}
+                      onClick={() => buyWrite?.()}
+                      disabled={needsApproval || isPendingBuy || isSuccessBuy}
+                    >
+                      {productTSHYPrice} $TSHY
+                      {isPendingBuy && (
+                        <span className="ml-2">
+                          <FaSpinner className="animate-spin" />
+                        </span>
+                      )}
+                    </button>
+                  </div>
                 ) : (
                   <ConnectButton
                     showBalance={false}
@@ -198,7 +227,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                     href={shopifyShippingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-md bg-blue-500 px-4 py-2 text-center text-white hover:bg-blue-600"
+                    className="rounded-md bg-blue-500 px-4 py-2 text-center text-white hover:border-0 hover:bg-blue-600"
                   >
                     Purchase Shipping
                   </a>

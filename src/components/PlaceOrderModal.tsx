@@ -80,10 +80,9 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     watch: true,
   });
 
-  const tokenAllowanceParsed = ethers.utils.formatEther(
-    tokenAllowance as BigNumber
-  );
-  console.log('tokenAllowance', tokenAllowanceParsed);
+  const tokenAllowanceParsed = tokenAllowance
+    ? ethers.utils.formatEther(tokenAllowance as BigNumber)
+    : '0';
 
   const productPriceContract = ethers.utils.parseUnits(productTSHYPrice);
 
@@ -101,11 +100,10 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     ...approveTokenConfig,
   });
 
-  const { isLoading: isPendingApproval } = useWaitForTransaction({
-    hash: approveTokenData?.hash,
-  });
-
-  // useEffect(() => {}, [isSuccessApproval]);
+  const { isLoading: isPendingApproval, isError: isApprovalError } =
+    useWaitForTransaction({
+      hash: approveTokenData?.hash,
+    });
 
   const needsApproval = Number(tokenAllowanceParsed) < Number(productTSHYPrice);
 
@@ -123,10 +121,13 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     ...buyProductConfig,
   });
 
-  const { isLoading: isPendingBuy, isSuccess: isSuccessBuy } =
-    useWaitForTransaction({
-      hash: buyProductData?.hash,
-    });
+  const {
+    isLoading: isPendingBuy,
+    isSuccess: isSuccessBuy,
+    isError: isErrorBuy,
+  } = useWaitForTransaction({
+    hash: buyProductData?.hash,
+  });
 
   return (
     <div
@@ -241,6 +242,13 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                   </button>
                 )}
               </div>
+              {(isApprovalError || isErrorBuy) && (
+                <div className="col-span-2">
+                  <p className="text-red-500">
+                    Oops something went wrong, please try again
+                  </p>
+                </div>
+              )}
               <div className="mt-6">
                 <button
                   type="button"

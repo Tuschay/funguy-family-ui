@@ -10,8 +10,6 @@ type ProductProps = {
 const Product: React.FC<ProductProps> = ({ product, client }) => {
   const [showModal, setShowModal] = useState(false);
 
-  console.log(product);
-
   const handleOpenModal = () => {
     setShowModal(true);
   };

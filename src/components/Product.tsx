@@ -36,10 +36,10 @@ const Product: React.FC<ProductProps> = ({ product, client }) => {
         <p className="text-gray-600">{productDescription}</p>
       </div>
       <div className="mt-4 flex items-center justify-between">
-        <p className="font-semibold text-blue-600">{productTSHYPrice} $TSHY</p>
+        <p className="font-semibold text-black">{productTSHYPrice} $TSHY</p>
         <button
           onClick={handleOpenModal}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-black px-4 py-2 text-white hover:bg-gray-700"
         >
           Buy Now
         </button>

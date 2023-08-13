@@ -3,8 +3,6 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { BigNumber, ethers } from 'ethers';
 import React, { useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { AiOutlineCloseCircle } from 'react-icons/ai';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { FaSpinner } from 'react-icons/fa';
 import {
   useAccount,
@@ -34,42 +32,6 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     null
   );
   const { isConnected, address } = useAccount();
-
-  const handleNextStep = async () => {
-    if (currentStep === 1) {
-      const checkout = await client.checkout.create();
-
-      const checkoutId = checkout.id;
-
-      const lineItemsToAdd = [
-        {
-          variantId: productVariantId,
-          quantity: 1,
-        },
-      ];
-
-      const addedItemCheckout = await client.checkout.addLineItems(
-        checkoutId,
-        lineItemsToAdd
-      );
-
-      const { webUrl } = addedItemCheckout;
-
-      setShopifyShippingUrl(webUrl);
-    }
-
-    setCurrentStep(currentStep + 1);
-  };
-
-  const handlePrevStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
-
-  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
 
   // Get the token allowance for the current user
   const { data: tokenAllowance } = useContractRead({
@@ -129,6 +91,56 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     hash: buyProductData?.hash,
   });
 
+  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      e.target === e.currentTarget &&
+      !isPendingApproval &&
+      !isPendingBuy &&
+      !isSuccessBuy
+    ) {
+      onClose();
+    }
+  };
+
+  const handleNextStep = async () => {
+    if (currentStep === 1 && !isSuccessBuy) {
+      const checkout = await client.checkout.create();
+
+      const checkoutId = checkout.id;
+
+      const lineItemsToAdd = [
+        {
+          variantId: productVariantId,
+          quantity: 1,
+        },
+      ];
+
+      const addedItemCheckout = await client.checkout.addLineItems(
+        checkoutId,
+        lineItemsToAdd
+      );
+
+      const { webUrl } = addedItemCheckout;
+
+      setShopifyShippingUrl(webUrl);
+      setCurrentStep(currentStep + 1);
+    } else if (currentStep === 1 && isSuccessBuy) {
+      setCurrentStep(currentStep + 1);
+    } else if (currentStep === 2) {
+      // Move to the warning step
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (currentStep === 3) {
+      // Move back from the warning step to the previous step
+      setCurrentStep(currentStep - 1);
+    } else {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-lg"
@@ -139,10 +151,6 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
           className="relative mx-2 w-full max-w-xl overflow-y-auto rounded-lg bg-white p-6 pt-12"
           style={{ maxHeight: '80vh' }}
         >
-          <AiOutlineCloseCircle
-            className="absolute right-3 top-3 cursor-pointer text-3xl text-gray-500 hover:text-gray-600"
-            onClick={onClose}
-          />
           {currentStep === 1 && (
             <>
               <h2 className="mb-4 text-xl font-medium">Step 1: Overview</h2>
@@ -159,7 +167,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                 <button
                   type="button"
                   onClick={handleNextStep}
-                  className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                  className="rounded-md bg-black px-4 py-2 text-white hover:bg-gray-700"
                 >
                   Next
                 </button>
@@ -173,12 +181,12 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                 <h3 className="mt-2">Connect wallet and purchase with TSHY</h3>
                 {/* Button 1: Display the product price */}
                 {isConnected ? (
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <button
                       type="button"
-                      className={`flex items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 ${
+                      className={`flex items-center justify-center rounded-md bg-black px-4 py-2 text-white hover:bg-gray-700 ${
                         isPendingApproval || !needsApproval || isSuccessBuy
-                          ? 'cursor-not-allowed opacity-70'
+                          ? 'cursor-not-allowed opacity-20'
                           : ''
                       }`}
                       onClick={() => approveWrite?.()}
@@ -195,15 +203,15 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                     </button>
                     <button
                       type="button"
-                      className={`flex items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 ${
+                      className={`flex items-center justify-center rounded-md bg-black px-4 py-2 text-white hover:bg-gray-700 ${
                         needsApproval || isPendingBuy || isSuccessBuy
-                          ? 'cursor-not-allowed opacity-70'
+                          ? 'cursor-not-allowed opacity-20'
                           : ''
                       }`}
                       onClick={() => buyWrite?.()}
                       disabled={needsApproval || isPendingBuy || isSuccessBuy}
                     >
-                      {productTSHYPrice} $TSHY
+                      Spend {productTSHYPrice} TSHY
                       {isPendingBuy && (
                         <span className="ml-2">
                           <FaSpinner className="animate-spin" />
@@ -228,7 +236,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                     href={shopifyShippingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-md bg-blue-500 px-4 py-2 text-center text-white hover:border-0 hover:bg-blue-600"
+                    className="rounded-md bg-black px-4 py-2 text-center text-white hover:border-0 hover:bg-gray-700"
                   >
                     Purchase Shipping
                   </a>
@@ -236,7 +244,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                   <button
                     type="button"
                     disabled
-                    className="cursor-not-allowed rounded-md bg-blue-500/50 px-4 py-2 text-white opacity-50 hover:bg-blue-600"
+                    className="cursor-not-allowed rounded-md bg-black/20 px-4 py-2 text-white hover:bg-gray-700/20"
                   >
                     Purchase Shipping
                   </button>
@@ -249,16 +257,52 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                   </p>
                 </div>
               )}
-              <div className="mt-6">
+              <div className="mt-6 flex justify-between">
                 <button
                   type="button"
                   onClick={handlePrevStep}
-                  className="rounded-md bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
+                  className="rounded-md bg-black px-4 py-2 text-white hover:bg-gray-700"
                 >
                   Back
                 </button>
+                <button
+                  type="button"
+                  onClick={handleNextStep}
+                  className="ml-2 rounded-md bg-black px-4 py-2 text-white hover:bg-gray-700"
+                >
+                  Next
+                </button>
               </div>
             </div>
+          )}
+          {currentStep === 3 && isSuccessBuy && (
+            <>
+              <h2 className="mb-4 text-xl font-medium">
+                Step 3: Confirm purchase is completed
+              </h2>
+              <p className="rounded-md bg-yellow-200 p-4 text-black">
+                Important: Make sure to purchase shipping with Shopify to
+                complete your purchase. If you close this modal without
+                purchasing shipping, you might lose your link to finish the
+                purchase.
+              </p>
+              <div className="mt-6 flex justify-between">
+                <button
+                  type="button"
+                  className="rounded-md bg-black px-4 py-2 text-white hover:bg-gray-700"
+                  onClick={handlePrevStep}
+                >
+                  Back
+                </button>
+                <button
+                  type="button"
+                  className="rounded-md bg-black px-4 py-2 text-white hover:bg-green-700"
+                  onClick={onClose}
+                >
+                  Confirm Close
+                </button>
+              </div>
+            </>
           )}
         </div>
       )}

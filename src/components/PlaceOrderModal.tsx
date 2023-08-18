@@ -35,10 +35,10 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
 
   // Get the token allowance for the current user
   const { data: tokenAllowance } = useContractRead({
-    address: AppConfig.addressTestCoin as `0x${string}`,
-    abi: AppConfig.abiTestToken,
+    address: AppConfig.addressCoin as `0x${string}`,
+    abi: AppConfig.abiCoin,
     functionName: 'allowance',
-    args: [address, AppConfig.addressTestMerchandiseSale],
+    args: [address, AppConfig.addressMerchandiseSaleContract],
     watch: true,
   });
 
@@ -49,10 +49,10 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
   const productPriceContract = ethers.utils.parseUnits(productTSHYPrice);
 
   const { config: approveTokenConfig } = usePrepareContractWrite({
-    address: AppConfig.addressTestCoin as `0x${string}`,
-    abi: AppConfig.abiTestToken,
+    address: AppConfig.addressCoin as `0x${string}`,
+    abi: AppConfig.abiCoin,
     functionName: 'approve',
-    args: [AppConfig.addressTestMerchandiseSale, productPriceContract],
+    args: [AppConfig.addressMerchandiseSaleContract, productPriceContract],
     overrides: {
       gasLimit: BigNumber.from(Number(144000 * 1.2).toString()),
     },
@@ -70,8 +70,8 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
   const needsApproval = Number(tokenAllowanceParsed) < Number(productTSHYPrice);
 
   const { config: buyProductConfig } = usePrepareContractWrite({
-    address: AppConfig.addressTestMerchandiseSale as `0x${string}`,
-    abi: AppConfig.abiTestMerchandiseSale,
+    address: AppConfig.addressMerchandiseSaleContract as `0x${string}`,
+    abi: AppConfig.abiMerchandiseSaleContract,
     functionName: 'buyProduct',
     args: [productPriceContract],
     overrides: {

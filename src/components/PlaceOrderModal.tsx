@@ -8,6 +8,7 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
   useWaitForTransaction,
 } from 'wagmi';
@@ -32,6 +33,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     null
   );
   const { isConnected, address } = useAccount();
+  const { chain } = useNetwork();
 
   // Get the token allowance for the current user
   const { data: tokenAllowance } = useContractRead({
@@ -180,7 +182,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
               <div className="mb-4 grid w-full grid-cols-1 gap-4">
                 <h3 className="mt-2">Connect wallet and purchase with TSHY</h3>
                 {/* Button 1: Display the product price */}
-                {isConnected ? (
+                {isConnected && chain?.name === 'Polygon' ? (
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <button
                       type="button"

@@ -143,8 +143,6 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
     }
   };
 
-  console.log(chain?.name);
-
   return (
     <div
       className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-lg"

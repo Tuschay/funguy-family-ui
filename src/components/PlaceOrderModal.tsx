@@ -36,7 +36,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
   // Get the token allowance for the current user
   const { data: tokenAllowance } = useContractRead({
     address: AppConfig.addressCoin as `0x${string}`,
-    abi: AppConfig.abiMerchandiseSaleContract,
+    abi: AppConfig.abiCoin,
     functionName: 'allowance',
     args: [address, AppConfig.addressMerchandiseSaleContract],
     watch: true,
@@ -50,7 +50,7 @@ const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
 
   const { config: approveTokenConfig } = usePrepareContractWrite({
     address: AppConfig.addressCoin as `0x${string}`,
-    abi: AppConfig.abiMerchandiseSaleContract,
+    abi: AppConfig.abiCoin,
     functionName: 'approve',
     args: [AppConfig.addressMerchandiseSaleContract, productPriceContract],
     overrides: {

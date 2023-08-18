@@ -11,7 +11,7 @@ export const AppConfig = {
   // addressCoin: '0xab6c728e77fd325c1c290c46d9d0378c37a6116e', // Goerli
   // addressFunguy: '0x53EF7Dd9087e98406F1f68fb4c23494bDb5cEdA4', // ST
   // addressCoin: '0x7B093653Bf2f9A9812c8b4D67FcDb7183857B288', // ST
-  //  addressTestCoin: '0xc1fB95D508a54dA01A13B4eCa724fef3bB44567F', // Goerli
+  // addressTestCoin: '0xc1fB95D508a54dA01A13B4eCa724fef3bB44567F', // Goerli
   // addressTestMerchandiseSale: '0xB3A3C30BA217FBE9b10ffD4414dB40473D8F7285', // Goerli
   addressMerchandiseSaleContract: '0x7333d3D76b5d9e98a01078ab11b79A3D59f6EA47', // Polygon
   ipfsHash: 'QmQe4UKnTrGg6MKZdYjpTiSz5m8xg8fZcfgcvCZU3MmBZd',

@@ -27,6 +27,7 @@ const Product: React.FC<ProductProps> = ({ product, client }) => {
   const productTitle = product.title;
   const productDescription = product.description;
   const productTSHYPrice = product.variants[0].selectedOptions[0].value;
+  const productAvailable = product.availableForSale;
 
   const { address } = useAccount();
   const [balance, setBalance] = useState('0');
@@ -57,10 +58,11 @@ const Product: React.FC<ProductProps> = ({ product, client }) => {
         <p className="font-semibold text-black">{productTSHYPrice} $TSHY</p>
         {balance > productTSHYPrice ? (
           <button
+            disabled={!productAvailable}
             onClick={handleOpenModal}
             className="rounded-md bg-black px-4 py-2 text-white hover:bg-gray-700"
           >
-            Buy Now
+            {productAvailable ? 'Buy Now' : 'Sold Out'}
           </button>
         ) : (
           <button

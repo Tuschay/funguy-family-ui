@@ -26,7 +26,9 @@ const Product: React.FC<ProductProps> = ({ product, client }) => {
   const productImage = product.images[0].src;
   const productTitle = product.title;
   const productDescription = product.description;
-  const productTSHYPrice = product.variants[0].selectedOptions[0].value;
+  const productTSHYPrice = Number(
+    product.variants[0].selectedOptions[0].value as string
+  );
   const productAvailable = product.availableForSale;
 
   const { address } = useAccount();
@@ -43,6 +45,8 @@ const Product: React.FC<ProductProps> = ({ product, client }) => {
     },
   });
 
+  const tshyBalance = Number(balance);
+
   return (
     <div className="flex h-full flex-col rounded-lg border p-4 shadow-md">
       <div className="flex-1">
@@ -56,7 +60,7 @@ const Product: React.FC<ProductProps> = ({ product, client }) => {
       </div>
       <div className="mt-4 flex items-center justify-between">
         <p className="font-semibold text-black">{productTSHYPrice} $TSHY</p>
-        {balance > productTSHYPrice ? (
+        {tshyBalance > productTSHYPrice ? (
           <button
             disabled={!productAvailable}
             onClick={handleOpenModal}
@@ -75,7 +79,7 @@ const Product: React.FC<ProductProps> = ({ product, client }) => {
         {showModal && (
           <PlaceOrderModal
             productVariantId={productVariantId}
-            productTSHYPrice={productTSHYPrice}
+            productTSHYPrice={productTSHYPrice.toString()}
             onClose={handleCloseModal}
             client={client}
           />

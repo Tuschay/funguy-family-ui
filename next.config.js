@@ -22,6 +22,12 @@ module.exports = withBundleAnalyzer({
         port: '',
         pathname: '/ipfs/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'funguyfamily.myfilebase.com',
+        port: '',
+        pathname: '/ipfs/**',
+      },
     ],
   },
 });

@@ -47,17 +47,26 @@ const TokenData: FC<Props> = (props) => {
       });
   }, []);
 
-  const imageUrl = token.image?.replace('ipfs://', 'https://ipfs.io/ipfs/');
+  const imageUrl = token.image?.replace(
+    'ipfs://',
+    'https://funguyfamily.myfilebase.com/ipfs/'
+  );
 
   return (
     <div className="max-w-sm overflow-hidden rounded shadow-lg">
-      {token.image && (
+      {token.image ? (
         <Image
           className="w-full"
           width={172}
           height={172}
           src={imageUrl}
           alt="Funguy Family token"
+        />
+      ) : (
+        <img
+          className="w-full"
+          src="/assets/images/token-placeholder.jpeg"
+          alt="Placeholder"
         />
       )}
       <div className="px-6 py-4">

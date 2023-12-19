@@ -89,7 +89,7 @@ const MintDisplay: FC<Props> = (props) => {
         }
         hasMore={page < MAX_PAGES}
         loader={
-          <div role="status" className="m-6 w-fit">
+          <div role="status" className="m-8 mx-auto w-fit">
             <svg
               aria-hidden="true"
               className="mr-2 h-8 w-8 animate-spin fill-black text-gray-200 dark:text-gray-600"

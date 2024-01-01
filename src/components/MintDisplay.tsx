@@ -5,6 +5,7 @@ import { paginatedIndexesConfig, useContractInfiniteReads } from 'wagmi';
 
 import { AppConfig } from '@/utils/AppConfig';
 
+import BackToTopButton from './BackToTop';
 import MintToken from './MintToken';
 
 interface Props {
@@ -14,6 +15,8 @@ interface Props {
 const MintDisplay: FC<Props> = (props) => {
   const resultAll: JSX.Element[] = [];
   const resultUnsold: JSX.Element[] = [];
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
+
   const [page, setPage] = useState(0);
   const [showAll, setShowAll] = useState(true);
   const MAX_PAGES = 2500 / 16;
@@ -59,6 +62,22 @@ const MintDisplay: FC<Props> = (props) => {
     }
   });
 
+  const filteredTokensAll = resultAll.filter((item) => {
+    const tokenId = parseInt(item.key as string, 10);
+    return (
+      (showAll || !item.props.sold) &&
+      (searchQuery === null || tokenId.toString().includes(searchQuery))
+    );
+  });
+
+  const filteredTokensUnsold = resultUnsold.filter((item) => {
+    const tokenId = parseInt(item.key as string, 10);
+    return (
+      (showAll || !item.props.sold) &&
+      (searchQuery === null || tokenId.toString().includes(searchQuery))
+    );
+  });
+
   return (
     <div className="p-4">
       <InfiniteScroll
@@ -71,7 +90,7 @@ const MintDisplay: FC<Props> = (props) => {
         }
         hasMore={page < MAX_PAGES}
         loader={
-          <div role="status" className="m-6 w-fit">
+          <div role="status" className="m-8 mx-auto w-fit">
             <svg
               aria-hidden="true"
               className="mr-2 h-8 w-8 animate-spin fill-black text-gray-200 dark:text-gray-600"
@@ -93,30 +112,46 @@ const MintDisplay: FC<Props> = (props) => {
         }
       >
         <div className="flex flex-col">
-          <label className="relative mb-4 inline-flex cursor-pointer items-center">
-            <input
-              type="checkbox"
-              value=""
-              className="peer sr-only"
-              onChange={() => setShowAll(!showAll)}
-            />
-            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-black peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-black"></div>
-            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-              {showAll ? 'Show available' : 'Show all'}
-            </span>
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="relative mb-4 inline-flex cursor-pointer items-center">
+              <input
+                type="checkbox"
+                value=""
+                className="peer sr-only"
+                onChange={() => setShowAll(!showAll)}
+              />
+              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-black peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-black"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900">
+                {showAll ? 'Show available' : 'Show all'}
+              </span>
+            </label>
+
+            <label className="relative mb-4 inline-flex cursor-pointer items-center gap-2">
+              <span className="ml-3 text-sm font-medium text-gray-900">
+                Token ID:
+              </span>
+              <input
+                type="number"
+                min={0}
+                max={10000}
+                className="rounded-md border p-1 outline-none"
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </label>
+          </div>
 
           <div className="grid grid-cols-4 gap-4">
             {showAll
-              ? resultAll.map((item) => {
+              ? filteredTokensAll.map((item) => {
                   return item;
                 })
-              : resultUnsold.map((item) => {
+              : filteredTokensUnsold.map((item) => {
                   return item;
                 })}
           </div>
         </div>
       </InfiniteScroll>
+      <BackToTopButton />
     </div>
   );
 };

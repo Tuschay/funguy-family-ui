@@ -5,6 +5,7 @@ import { paginatedIndexesConfig, useContractInfiniteReads } from 'wagmi';
 
 import { AppConfig } from '@/utils/AppConfig';
 
+import BackToTopButton from './BackToTop';
 import MintToken from './MintToken';
 
 interface Props {
@@ -150,6 +151,7 @@ const MintDisplay: FC<Props> = (props) => {
           </div>
         </div>
       </InfiniteScroll>
+      <BackToTopButton />
     </div>
   );
 };
